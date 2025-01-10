@@ -63,12 +63,35 @@ def cari_data_sewa(nama_penyewa):
     except FileNotFoundError:
         st.warning("Data sewa belum tersedia.")
 
+# Fungsi untuk menghapus data berdasarkan nama penyewa
+def hapus_data_sewa(nama_penyewa):
+    try:
+        with open(data_file, mode='r') as file:
+            reader = csv.reader(file)
+            data = list(reader)
+
+        header = data[0]
+        data_baru = [row for row in data if nama_penyewa.lower() not in row[0].lower()]
+
+        if len(data_baru) == len(data):
+            st.info("Data tidak ditemukan atau tidak ada perubahan.")
+            return
+
+        with open(data_file, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(header)
+            writer.writerows(data_baru)
+
+        st.success("Data berhasil dihapus!")
+    except FileNotFoundError:
+        st.warning("Data sewa belum tersedia.")
+
 # Aplikasi Streamlit
 def main():
     cek_dataset()
     st.title("Aplikasi Pendataan Sewa Mobil")
 
-    menu = st.sidebar.selectbox("Menu", ["Tambah Data", "Tampilkan Data", "Cari Data"])
+    menu = st.sidebar.selectbox("Menu", ["Tambah Data", "Tampilkan Data", "Cari Data", "Hapus Data"])
 
     if menu == "Tambah Data":
         st.header("Tambah Data Sewa")
@@ -93,6 +116,12 @@ def main():
         nama_penyewa = st.text_input("Masukkan Nama Penyewa")
         if st.button("Cari"):
             cari_data_sewa(nama_penyewa)
+
+    elif menu == "Hapus Data":
+        st.header("Hapus Data Sewa")
+        nama_penyewa = st.text_input("Masukkan Nama Penyewa untuk Dihapus")
+        if st.button("Hapus"):
+            hapus_data_sewa(nama_penyewa)
 
 if __name__ == "__main__":
     main()
