@@ -39,7 +39,7 @@ def tampilkan_data_sewa():
             data = list(reader)
             if len(data) > 1:
                 st.write("### Data Sewa Mobil")
-                st.table(data[0:])  # Menampilkan data tanpa header
+                st.table(data[1:])  # Menampilkan data tanpa header
             else:
                 st.info("Tidak ada data sewa.")
     except FileNotFoundError:
